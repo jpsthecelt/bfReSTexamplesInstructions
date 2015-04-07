@@ -1,0 +1,84 @@
+	
+	Execution of BigFix Action-initiation via Commandline...
+T:
+
+But anyway, here's a description of what is possible.
+
+So, BigFix/TEM v9 has added a REST api to allow integration with other products, as well as providing commandline
+execution/query of TEM data.  The CLI command for interacting with this is called 'iem'.  One 'logs in' with their console
+password, and can then issue commands using 'iem'. For example:
+	iem login --servername=GRASSKEET --user=adminMO --password=adminmo
+
+then, a query of fixlets of the 'master' operator could be made, such as:
+	iem get fixlets/master
+
+resulting in something like:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<BESAPI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BESAPI.xsd">
+        <Fixlet Resource="http://grasskeet:52311/api/fixlet/master/977?" LastModified="Wed, 13 Jul 2011 16:26:08 +0000">
+                <Name>OSD - Deploy Microsoft .NET Framework 3.5 SP1</Name>
+                <ID>977</ID>
+        </Fixlet>
+</BESAPI>
+
+Also, I could 'take action' on one of these fixlets by creating an xml file like 'stopBesGather', with the appropriate 
+ID & target specified as follows:
+
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BES.xsd">
+       <SourcedFixletAction>
+               <SourceFixlet>
+                       <Sitename>ActionSite</Sitename>
+                       <FixletID>7234</FixletID>
+                       <Action>Action1</Action>
+               </SourceFixlet>
+               <Target>
+                       <ComputerName>GRASSKEET</ComputerName>
+               </Target>
+       </SourcedFixletAction>
+</BES>
+
+This assumes that fixlets with ID=7233 & 7234 exist and that the BESGather service is currently running (see attached
+for my fixlets & my sample stopBesGather.xml & startBesGather.xml templates)
+
+I can then start and stop the BesGather service using command lines as follows:
+	
+	iem post stopBesGather.xml actions
+
+after which I can restart it using:
+
+	iem post startBesGather.xml actions
+[see the following:]
+
+-bash-4.1$ iem login --server=GRASSKEET --user=adminMO --password=adminmo
+Server  : GRASSKEET
+User    : adminMO
+Successfully logged in to server!
+-bash-4.1$ iem post stopBesGather.xml actions
+<?xml version="1.0" encoding="UTF-8"?>
+<BESAPI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BESAPI.xsd">
+        <Action Resource="http://GRASSKEET:52311/api/action/7236?" LastModified="Thu, 25 Apr 2013 18:16:41 +0000">
+                <Name>Stop BESGather Service</Name>
+                <ID>7236</ID>
+        </Action>
+</BESAPI>
+
+You can also see the screenshots in the attached files:
+
+There's a lot of information about this at this URL:
+https://www.ibm.com/developerworks/community/wikis/home?lang=en#!/wiki/Tivoli%20Endpoint%20Manager/page/REST%20API
+
+4) I've also set up a Linux Server and some VMs in the San Francisco TEC center, that we can 'play with' remotely, specifically, to
+demonstrate Server Automation (if we don't have the time to get to that in your environment).  Let me know, and I'll show it to you.
+
+Also, here's a TEM server on linux guide to installation, so you can see what's involved:
+and some post-install DB2 'setup' commands:
+
+Hope to 'catch you soon'.
+
+Regards
+
+
+John Singer		 1480 64th St, Ste 200
+ 
+ 

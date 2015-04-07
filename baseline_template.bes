@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# README
+This README describes how to fill out this template baseline BES XML file.
+
+## Prerequisites
+* Familiarity with the notation of the XML XPath query language. XPath queries
+  are used below to reference nodes in XML.
+* The desired title and modification time for the baseline.
+* For each fixlet to be included:
+  * Fixlet ID.
+  * Fixlet's site's gather URL.
+  * BES XML file.
+
+## Process
+1. Set the title and modification time of the baseline. Enter the values into 
+   the nodes that match the below XPath queries.
+     /BES/Baseline/Title/text()
+     /BES/Baseline/MIMEField/Value/text()
+   The modification time must follow a specific format. Below is an example.
+     <Value>Mon, 24 Feb 2014 20:03:32 +0000</Value>
+2. Make sure there is a template BaselineComponent node for each fixlet to be 
+   included in the baseline. For example, if there are 11 fixlets to be
+   included, then there should be 11 template BaselineComponent nodes. This
+   template baseline BES XML file includes two template BaselineComponent nodes
+   located at
+     /BES/Baseline/BaselineComponentCollection/BaselineComponentGroup/
+     BaselineComponent
+3. For each fixlet, fill out its corresponding BaselineComponent node. There are
+   7 subnodes that need to be defined.
+   a) ./BaselineComponent/@ActionName
+        The content to be entered into (a) is verbatim sourced from
+        /BES/Fixlet/DefaultAction/@ID in the fixlet's BES XML file.
+   b) ./BaselineComponent/@Name
+        The content to be entered here is sourced from /BES/Fixlet/Title/text().
+   c) ./BaselineComponent/@SourceID
+        The content to be entered here is the fixlet's ID.
+   d) ./BaselineComponent/@SourceSiteURL
+        Enter the fixlet's site's gather URL.
+   e) ./BaselineComponent/ActionScript/@MIMEType
+        Sourced from /BES/Fixlet/DefaultAction/ActionScript/@MIMEType.
+   f) ./BaselineComponent/ActionScript/text()
+        Sourced from /BES/Fixlet/DefaultAction/ActionScript/text().
+   g) ./BaselineComponent/Relevance/text()
+        The content entered here is a combination of the nodes
+        /BES/Fixlet/Relevance/text(). The BES XML for a fixlet usually contains
+        multiple Relevance/text() nodes. If there is only one
+        /BES/Fixlet/Relevance/text() source node, however, (g) is directly
+        sourced from that node. If there are two or more, the text() nodes have
+        to be combined following a particular pattern. The process of
+        combination is shown through the following example. Suppose the BES XML
+        for the fixlet has the below /BES/Fixlet/Relevance nodes:
+          <Relevance>true   </Relevance>
+          <Relevance>not ia64 of operating system</Relevance>
+          <Relevance>  not false </Relevance>
+          <Relevance>  name of operating system starts with "Win"</Relevance>
+        The above nodes should be combined as
+          <Relevance>(((true) AND (not ia64 of operating system)) AND (not false)) AND (name of operating system starts with "Win")</Relevance>
+        Trailing and leading whitespace are removed from the source
+        Relevance/text() nodes, and there is a particular and strict nesting
+        format for parentheses. Also, no newline characters are allowed unless
+        they also exist in the source Relevance/text() nodes.
+
+4. The baseline BES XML file is complete.
+
+## For fixlets with multiple actions
+When adding a fixlet with more than one action, the default action may not be
+the desired action. Which fixlet action that is included in the baseline is
+reflected in the contents of the nodes (a)(e)(f) from step (3) in the above
+process. To include a fixlet action that isn't the default action, (a)(e)(f)
+should be sourced from /BES/Fixlet/Action. A fixlet's BES XML can contain
+multiple Action nodes, so make sure that (a)(e)(f) are only sourced from one
+Action node.
+-->
+
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="BES.xsd">
+  <Baseline>
+    <Title></Title>
+    <Description></Description>
+    <Relevance>true</Relevance>
+    <Category></Category>
+    <Source></Source>
+    <SourceID></SourceID>
+    <SourceSeverity></SourceSeverity>
+    <CVENames></CVENames>
+    <SANSID></SANSID>
+    <MIMEField>
+      <Name>x-fixlet-modification-time</Name>
+      <Value></Value> 
+    </MIMEField>
+    <Domain>BESC</Domain>
+    <BaselineComponentCollection>
+      <BaselineComponentGroup>
+        <BaselineComponent ActionName="" Name="" SourceID="" SourceSiteURL=""
+                           IncludeInRelevance="true">
+          <ActionScript MIMEType=""></ActionScript>
+          <SuccessCriteria Option="OriginalRelevance"></SuccessCriteria>
+          <Relevance></Relevance>
+        </BaselineComponent>
+        <BaselineComponent ActionName="" Name="" SourceID="" SourceSiteURL=""
+                           IncludeInRelevance="true">
+          <ActionScript MIMEType=""></ActionScript>
+          <SuccessCriteria Option="OriginalRelevance"></SuccessCriteria>
+          <Relevance></Relevance>
+        </BaselineComponent>
+      </BaselineComponentGroup>
+    </BaselineComponentCollection>
+  </Baseline>
+</BES>
+

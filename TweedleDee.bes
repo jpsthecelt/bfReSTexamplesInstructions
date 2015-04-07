@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BES.xsd">
+	<Fixlet>
+		<Title>Tweedle-Dee Tweedle-dum</Title>
+		<Description><![CDATA[This task will deploy: DsQueryGetFiles.<BR><BR>This task is applicable on: Windows 2000, Windows XP, Windows XP x64, Windows 2003, Windows 2003 x64, Windows Vista, Windows Vista x64, Windows 2008, Windows 2008 x64, Windows 7, Windows 7 x64 and Windows 2008 R2. ]]></Description>
+		<Relevance>(name of it = "Win2000" OR name of it = "WinXP" OR name of it = "WinXP-2003" OR (name of it = "Win2003" AND NOT x64 of it) OR (name of it = "Win2003" AND x64 of it) OR (name of it = "WinVista" AND product type of it = nt workstation product type AND NOT x64 of it) OR (name of it = "WinVista" AND product type of it = nt workstation product type AND x64 of it) OR ((name of it = "Win2008" or (name of it = "WinVista" and product type of it != nt workstation product type)) AND NOT x64 of it) OR ((name of it = "Win2008" or (name of it = "WinVista" and product type of it != nt workstation product type)) AND x64 of it) OR (name of it = "Win7" AND NOT x64 of it) OR (name of it = "Win7" AND x64 of it) OR name of it = "Win2008R2") of operating system AND TRUE</Relevance>
+		<Category>Software Distribution</Category>
+		<DownloadSize>194116</DownloadSize>
+		<Source>Software Distribution Wizard</Source>
+		<SourceID></SourceID>
+		<SourceSeverity></SourceSeverity>
+		<CVENames></CVENames>
+		<SANSID></SANSID>
+		<MIMEField>
+			<Name>x-fixlet-source</Name>
+			<Value>Software Distribution Wizard</Value>
+		</MIMEField>
+		<MIMEField>
+			<Name>x-fixlet-modification-time</Name>
+			<Value>Wed, 05 Sep 2012 02:02:09 +0000</Value>
+		</MIMEField>
+		<Domain>BESC</Domain>
+		<DefaultAction ID="Action1">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here </Link>
+				<PostLink>to initiate the deployment process.</PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell">download http://grasskeet:52311/Uploads/8471b1c90ce1198f36735628585a2a54f6ebd54b/DsQueryGet.tmp
+continue if {(size of it = 194116 AND sha1 of it = "8471b1c90ce1198f36735628585a2a54f6ebd54b") of file "DsQueryGet.tmp" of folder "__Download"}
+
+extract DsQueryGet.tmp
+
+if {not exists file "c:\Windows\System32\dsquery.exe"}
+move __Download\dsquery.exe "c:\Windows\System32\dsquery.exe"
+endif
+if {not exists file "c:\Windows\System32\dsquery.dll"}
+move __Download\dsquery.dll "c:\Windows\System32\dsquery.dll"
+endif
+if {not exists file "c:\Windows\System32\dsget.exe"}
+move __Download\dsget.exe "c:\Windows\System32\dsget.exe"
+endif
+if {not exists file "c:\Windows\System32\ds16gt.dll"}
+move __Download\ds16gt.dll "c:\Windows\System32\ds16gt.dll"
+endif
+</ActionScript>
+			<SuccessCriteria Option="RunToCompletion"></SuccessCriteria>
+		</DefaultAction>
+	</Fixlet>
+</BES>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BES.xsd">
+	<Baseline>
+		<Title>Grasskeet-CriticalVulns</Title>
+		<Description>Grasskeet-CriticalVulns </Description>
+		<Relevance>true</Relevance>
+		<Category></Category>
+		<Source></Source>
+		<SourceID></SourceID>
+		<SourceSeverity></SourceSeverity>
+		<CVENames></CVENames>
+		<SANSID></SANSID>
+		<MIMEField>
+			<Name>x-fixlet-modification-time</Name>
+			<Value>Mon, 19 Jan 2015 03:24:01 +0000</Value>
+		</MIMEField>
+		<Domain>BESC</Domain>
+		<BaselineComponentCollection>
+			<BaselineComponentGroup>
+				<BaselineComponent Name="MS11-092: Vulnerability in Windows Media Could Allow Remote Code Execution - Windows 7 Gold/SP1 (x64)" IncludeInRelevance="true" SourceSiteURL="http://sync.bigfix.com/cgi-bin/bfgather/bessecurity" SourceID="1109213" ActionName="Action1">
+					<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[prefetch Windows6.1-KB2619339-x64.msu sha1:762eda2dfdc5f9cfaa1e303da41cc5980fb75372 size:663198 http://download.microsoft.com/download/8/2/B/82BB0ECD-AE24-43A3-99E3-A3E7C038ECD5/Windows6.1-KB2619339-x64.msu sha256:2d9859494a7983ce4cf93065da9716b280e55ae586ddaafe58691d4260753050
+
+// Is Windows Update service running?
+continue if {exists running service "wuauserv" OR NOT exists service "wuauserv" whose (start type of it = "disabled")}
+
+waithidden "{pathname of system folder & "\wusa.exe"}" "{pathname of client folder of current site & "\__Download\Windows6.1-KB2619339-x64.msu"}" /quiet /norestart
+
+action requires restart "762eda2dfdc5f9cfaa1e303da41cc5980fb75372"  
+]]></ActionScript>
+					<SuccessCriteria Option="OriginalRelevance"></SuccessCriteria>
+					<Relevance><![CDATA[(((((((if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false) AND (if exists property "in proxy agent context" then ( not in proxy agent context ) else true )) AND (x64 of operating system)) AND ((language of version block of file "kernel32.dll" of system folder contains "English") OR (exists key "HKLM\System\CurrentControlSet\Control\Nls\MUILanguages" whose (exists value of it) of registry))) AND (not exists values "PROCESSOR_ARCHITECTURE" whose (it as string as lowercase = "ia64") of keys "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" of registry)) AND (((name of it = "Win7") AND (service pack major version of it = 1 OR service pack major version of it = 0)) of operating system)) AND ((exists file "EncDec.dll" whose ((version of it >= "6.6.7601.17000" AND version of it < "6.6.7601.17708") OR (version of it >= "6.6.7600.20000" AND version of it < "6.6.7600.21070") OR (version of it >= "6.6.7601.21000" AND version of it < "6.6.7601.21840") OR (version of it < "6.6.7600.16899")) of it) of (system wow64 folder) OR (exists file "EncDec.dll" whose ((version of it >= "6.6.7601.17000" AND version of it < "6.6.7601.17708") OR (version of it >= "6.6.7600.20000" AND version of it < "6.6.7600.21070") OR (version of it >= "6.6.7601.21000" AND version of it < "6.6.7601.21840") OR (version of it < "6.6.7600.16899")) of it) of (system x64 folder))) AND (not pending restart "762eda2dfdc5f9cfaa1e303da41cc5980fb75372")]]></Relevance>
+				</BaselineComponent>
+				<BaselineComponent Name="Flash Player 13.0.0.206 Available - Internet Explorer (Superseded)" IncludeInRelevance="true" SourceSiteURL="http://sync.bigfix.com/cgi-bin/bfgather/updateswindowsapps" SourceID="1091171" ActionName="Action1">
+					<ActionScript MIMEType="application/x-Fixlet-Windows-Shell">prefetch install_flash_player_13_active_x.exe sha1:c0a2ab288a35382a3ed5dd1df5d790cf4f4dda2d size:17338544 http://download.macromedia.com/get/flashplayer/current/licensing/win/install_flash_player_13_active_x.exe  sha256:580037c6ba9d9211fcad1da7b7e841e43ea588c5635e870c4ff256a44ba7d33b
+
+wait __Download\install_flash_player_13_active_x.exe /install
+
+action may require restart "c0a2ab288a35382a3ed5dd1df5d790cf4f4dda2d"</ActionScript>
+					<SuccessCriteria Option="OriginalRelevance"></SuccessCriteria>
+					<Relevance><![CDATA[((((((if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false) AND (if exists property "in proxy agent context" then ( not in proxy agent context ) else true )) AND (FALSE)) AND (FALSE)) AND ((exists folder "macromed\flash" of system folder) AND ((exists file whose (((it starts with "flash" and it ends with ".ocx") OR (it = "swflash.ocx")) of (name of it as lowercase) and version of it < "13.0.0.206") of it and not exists file whose ((it starts with "flash" and it ends with ".ocx") of (name of it as lowercase) and version of it >= "13.0.0.206") of it) of folder "macromed\flash" of system folder))) AND ((it != "WinNT" AND it != "Win95" AND it != "Win2000" AND it!= "Win8" AND it != "Win2012") of name of operating system)) AND (exists file "msiexec.exe" whose (version of it >= "2.0") of system folder)]]></Relevance>
+				</BaselineComponent>
+				<BaselineComponent Name="Mozilla Firefox 29.0 Available (Superseded)" IncludeInRelevance="true" SourceSiteURL="http://sync.bigfix.com/cgi-bin/bfgather/updateswindowsapps" SourceID="6081194" ActionName="Action1">
+					<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[if {exists value "CurrentVersion" whose (it as string contains "en-US") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:a4bb872697189e4402ec135aeb993cdb26bb2e0a size:29024616 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/en-US/Firefox%20Setup%2029.0.exe sha256:b3d516e4c55f1cf37a72f83c1d863d389c2a5922d854352857f704b3f7e4383d
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "a4bb872697189e4402ec135aeb993cdb26bb2e0a"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "fr") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:fca5e6eb90e00109215ed9a25555b3f5572f4d57 size:29157944 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/fr/Firefox%20Setup%2029.0.exe sha256:6a7a7a1ed975a97f20564a50fdf4e1a89def651ca2c190e19d080d7a80e25aa3
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "fca5e6eb90e00109215ed9a25555b3f5572f4d57"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "de") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:fb5a3c5308ef03e77dea125ffa449ceee84a218b size:28860016 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/de/Firefox%20Setup%2029.0.exe sha256:93473efcb461b3c2a24ede5d6266d39616fefb8ce436726be39b3890780a8d73
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "fb5a3c5308ef03e77dea125ffa449ceee84a218b"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "it") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:272fabc34c179fc5d89cf1b0ff2d4f82239d6160 size:28795184 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/it/Firefox%20Setup%2029.0.exe sha256:819c815113089c1298e5d4e4dab7429339a065b6dcd0f7fbdda0a13c95d6c339
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "272fabc34c179fc5d89cf1b0ff2d4f82239d6160"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "es-ES") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:6c3b0d29efe87362f357414405b2860f79e47faa size:28794256 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/es-ES/Firefox%20Setup%2029.0.exe sha256:c7f9320c441aafd3807ef098bea98d10c8bfb47bafda15d1450686445666d516
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "6c3b0d29efe87362f357414405b2860f79e47faa"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "zh-CN") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:921da19892b68c87bd6f4dcbe723d5883ae2ff52 size:28875552 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/zh-CN/Firefox%20Setup%2029.0.exe sha256:fa2aabeb12b31c74c0a28ca97bc4655cf4f3cc6ab80434555cbb872c0ab2a20c
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "921da19892b68c87bd6f4dcbe723d5883ae2ff52"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "ja") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:c6de4c3ab1679a339eae006d92c65bd7b50a78ea size:29080872 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/ja/Firefox%20Setup%2029.0.exe sha256:62cb5c575bac8152b4a808d748e733a3308cc0dbe0d4c8c680fe0d9ed2dddc29
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "c6de4c3ab1679a339eae006d92c65bd7b50a78ea"
+
+
+elseif {exists value "CurrentVersion" whose (it as string contains "zh-TW") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:60073a0f6edf3f296394466e52e121d73983214b size:29057144 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/zh-TW/Firefox%20Setup%2029.0.exe sha256:99672f8ded24ab2343f82639b9801cf6cdb81bc2014be14a717ca1c937a8d3f7
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "60073a0f6edf3f296394466e52e121d73983214b"
+
+
+elseif {exists value "CurrentVersion" whose (it as string contains "ko") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:1f2f5ef8278b743d4e783ff3afab7716c722c012 size:28866640 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/ko/Firefox%20Setup%2029.0.exe sha256:1d4fe6c8401ed22c99649a4f971594d1301efbe4f9dba153aa789bf65bd495e5
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "1f2f5ef8278b743d4e783ff3afab7716c722c012"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "pt-BR") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:1453e7e8eee0ab3dcce18cc440d692b723c62d36 size:29007536 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/pt-BR/Firefox%20Setup%2029.0.exe sha256:0b6b0999cacffd1d1d24861dbbc514345d5c5d5f42d976b0240de912288463d9
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "1453e7e8eee0ab3dcce18cc440d692b723c62d36"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "ru") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:7cde0a6ad72109b5660f38353972f416fc698aa1 size:29263880 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/ru/Firefox%20Setup%2029.0.exe sha256:6587029dad4d6973d724ab42ece11aa79c093d32c686008a01da7721e97eb73d
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "7cde0a6ad72109b5660f38353972f416fc698aa1"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "pl") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:fe3c81ae6a09b905036c882caf00c46585b96476 size:29772880 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/pl/Firefox%20Setup%2029.0.exe sha256:dfb99de3387c356da906b2a1298474d9491dc424e0f7993794807659f3dab7cc
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "fe3c81ae6a09b905036c882caf00c46585b96476"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "hu") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:43e377a4b9d88e14d0e11b887d9feaf9563b57c0 size:29412240 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/hu/Firefox%20Setup%2029.0.exe sha256:5050c67baff743bb40679122ff6586a367cc6a13de05582e44bbee214de122f9
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "43e377a4b9d88e14d0e11b887d9feaf9563b57c0"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "cs") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:68cf1c773c41ae9b785db803e84dcb97f008aa3f size:28862184 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/cs/Firefox%20Setup%2029.0.exe sha256:ee908325b1acd11dc290c271b518bee1ef5bf66c1f619f4e0b54c973ef91e410
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "68cf1c773c41ae9b785db803e84dcb97f008aa3f"
+
+elseif {exists value "CurrentVersion" whose (it as string contains "en-GB") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry}
+
+prefetch Firefox_Setup_29.0.exe sha1:0272659c1c8e8f6e71c422e7a5e5d882bea13a13 size:28842488 http://download-installer.cdn.mozilla.net/pub/firefox/releases/29.0/win32/en-GB/Firefox%20Setup%2029.0.exe sha256:b325cd3e3a502e1017f356c85ddd3cc2f676aab8628e85f0f5be895cb5b42c84
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"="{if (exists file ((value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string)&"\Mozilla Firefox.lnk")) then "" else escape of (value "Common Desktop" of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" of registry as string & "\Mozilla Firefox.lnk")}"
+
+wait __Download\Firefox_Setup_29.0.exe -ms -ira -hideBanner -cleanUpOnUpgrade 
+
+delete {value "MozillaFirefoxDesktopIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete" of registry as string} 
+
+regdelete "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\FilesToDelete]" "MozillaFirefoxDesktopIcon"
+
+action may require restart "0272659c1c8e8f6e71c422e7a5e5d882bea13a13"
+
+endif]]></ActionScript>
+					<SuccessCriteria Option="OriginalRelevance"></SuccessCriteria>
+					<Relevance><![CDATA[((((if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false) AND (if exists property "in proxy agent context" then ( not in proxy agent context ) else true )) AND (FALSE)) AND (FALSE)) AND ((exists regapp "firefox.exe" whose (product version of it < "29.0")) OR (exists value "CurrentVersion" whose ((preceding text of first " " of (it as string)) as version < "29.0") of keys "HKEY_LOCAL_MACHINE\Software\Mozilla\Mozilla Firefox" of registry))]]></Relevance>
+				</BaselineComponent>
+			</BaselineComponentGroup>
+		</BaselineComponentCollection>
+	</Baseline>
+</BES>

@@ -1,0 +1,4 @@
+		<SearchComponentPropertyReference PropertyName="Computer Name" Comparison="Contains">
+			<SearchText>OSD</SearchText>
+			<Relevance>exists (computer name) whose (it as string as lowercase contains "OSD" as lowercase)</Relevance>
+		</SearchComponentPropertyReference>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=IBM437" http-equiv="Content-Type">
+
+<title>postExample - RDoc Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body class="file">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./#blah#.html">#blah#</a>
+  
+    <li class="file"><a href="./fixedFixlets_txt.html">fixedFixlets</a>
+  
+    <li class="file"><a href="./fixletsFixed_txt.html">fixletsFixed</a>
+  
+    <li class="file"><a href="./postExample_txt.html">postExample</a>
+  
+    <li class="file"><a href="./stopBesGather_txt.html">stopBesGather</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation" class="description">
+  
+<pre>Execution of BigFix Action-initiation via Commandline...</pre>
+
+<p>T:</p>
+
+<p>But anyway, here's a description of what is possible.</p>
+
+<p>So, BigFix/TEM v9 has added a REST api to allow integration with other
+products, as well as providing commandline execution/query of TEM data. 
+The CLI command for interacting with this is called 'iem'.  One 'logs in'
+with their console password, and can then issue commands using 'iem'. For
+example:</p>
+
+<pre>iem login --servername=GRASSKEET --user=adminMO --password=adminmo</pre>
+
+<p>then, a query of fixlets of the 'master' operator could be made, such as:</p>
+
+<pre>iem get fixlets/master</pre>
+
+<p>resulting in something like:</p>
+
+<pre><p>&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;BESAPI xmlns:xsi="<a
+href="http://www.w3.org/2001/XMLSchema-instance">www.w3.org/2001/XMLSchema-instance</a>"
+xsi:noNamespaceSchemaLocation="BESAPI.xsd"&gt;</p>
+
+&lt;Fixlet Resource=&quot;http://grasskeet:52311/api/fixlet/master/977?&quot; LastModified=&quot;Wed, 13 Jul 2011 16:26:08 +0000&quot;&gt;
+        &lt;Name&gt;OSD - Deploy Microsoft .NET Framework 3.5 SP1&lt;/Name&gt;
+        &lt;ID&gt;977&lt;/ID&gt;
+&lt;/Fixlet&gt;
+
+<p>&lt;/BESAPI&gt;</p>
+</pre>
+<p>Also, I could 'take action' on one of these fixlets by creating an xml file
+like 'stopBesGather', with the appropriate  ID &amp; target specified as
+follows:</p>
+
+<pre><p>&lt;BES xmlns:xsi="<a
+href="http://www.w3.org/2001/XMLSchema-instance">www.w3.org/2001/XMLSchema-instance</a>"
+xsi:noNamespaceSchemaLocation="BES.xsd"&gt;</p>
+
+&lt;SourcedFixletAction&gt;
+        &lt;SourceFixlet&gt;
+                &lt;Sitename&gt;ActionSite&lt;/Sitename&gt;
+                &lt;FixletID&gt;7234&lt;/FixletID&gt;
+                &lt;Action&gt;Action1&lt;/Action&gt;
+        &lt;/SourceFixlet&gt;
+        &lt;Target&gt;
+                &lt;ComputerName&gt;GRASSKEET&lt;/ComputerName&gt;
+        &lt;/Target&gt;
+&lt;/SourcedFixletAction&gt;
+
+<p>&lt;/BES&gt;</p></pre>
+
+<p>This assumes that fixlets with ID=7233 &amp; 7234 exist and that the
+BESGather service is currently running (see attached for my fixlets &amp;
+my sample stopBesGather.xml &amp; startBesGather.xml templates)</p>
+
+<p>I can then start and stop the BesGather service using command lines as
+follows:</p>
+
+<pre>iem post stopBesGather.xml actions</pre>
+
+<p>after which I can restart it using:</p>
+
+<pre>iem post startBesGather.xml actions</pre>
+<p> Like so:</p>
+<pre><p>-bash-4.1$ iem login --server=GRASSKEET --user=adminMO --password=adminmo
+Server  : GRASSKEET User    : adminMO Successfully logged in to server!
+-bash-4.1$ iem post stopBesGather.xml actions &lt;?xml version="1.0"
+encoding="UTF-8"?&gt; &lt;BESAPI xmlns:xsi="<a
+href="http://www.w3.org/2001/XMLSchema-instance">www.w3.org/2001/XMLSchema-instance</a>"
+xsi:noNamespaceSchemaLocation="BESAPI.xsd"&gt;</p>
+
+&lt;Action Resource=&quot;http://GRASSKEET:52311/api/action/7236?&quot; LastModified=&quot;Thu, 25 Apr 2013 18:16:41 +0000&quot;&gt;
+        &lt;Name&gt;Stop BESGather Service&lt;/Name&gt;
+        &lt;ID&gt;7236&lt;/ID&gt;
+&lt;/Action&gt;
+<p>&lt;/BESAPI&gt;</p></pre>
+
+<p>You can also see the screenshots in the attached files:</p>
+
+<p>There's a lot of information about this at this URL: <a
+href="https://www.ibm.com/developerworks/community/wikis/home?lang=en#!/wiki/Tivoli%20Endpoint%20Manager/page/REST%20API">www.ibm.com/developerworks/community/wikis/home?lang=en#!/wiki/Tivoli%20Endpoint%20Manager/page/REST%20API</a></p>
+
+<p>4) I've also set up a Linux Server and some VMs in the San Francisco TEC
+center, that we can 'play with' remotely, specifically, to demonstrate
+Server Automation (if we don't have the time to get to that in your
+environment).  Let me know, and I'll show it to you.</p>
+
+<p>Also, here's a TEM server on linux guide to installation, so you can see
+what's involved: and some post-install DB2 'setup' commands:</p>
+
+<p>Hope to 'catch you soon'.</p>
+
+<p>Regards</p>
+
+<p>John Singer              1480 64th St, Ste 200</p>
+
+<pre></pre>
+</dd></dl>
+
+</div>
+
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.1.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

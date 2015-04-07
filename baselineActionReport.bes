@@ -1,0 +1,236 @@
+<script type="text/javascript" src="sortables.js"></script>
+	  <style type="text/css">
+		a {
+			text-decoration: none;
+		}
+		a:hover {
+			color: #FF8000;
+			text-decoration: none;
+		}
+		table {
+			margin: 0;
+			color: #222;
+			font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+			empty-cells:hide;
+		}
+		th {
+			font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+			color: navy;
+			background-color: #F2F2F2;
+			border: 1px solid #cccccc;
+			margin: 0;
+			padding: 4px 10px 4px 5px;
+			text-align: left;
+		}
+		td {
+			color: #222;
+			font: 8pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+			border-bottom: 1px solid #cccccc;
+			margin: 0;
+			padding: 6px 20px 1px 0;
+		}
+		td.userinput {
+			color: #222;
+			font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+			font-weight: bold;
+			border-bottom: 0px;
+			margin: 0;
+			padding: 6px 20px 1px 0;
+		}
+		td.errormsg {
+			color: red;
+			font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+			font-weight: bold;
+			border-bottom: 0px;
+			margin: 0;
+			padding: 6px 20px 1px 0;
+		}
+		td.msg {
+			color: #747170;
+			font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+			font-weight: bold;
+			border-bottom: 0px;
+			margin: 0;
+			padding: 6px 20px 1px 0;
+		}
+		/*h3 {
+			font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+			background-color: #747170;
+			padding: 4px 4px 4px 4px;
+			color: white;
+			width: 100%;
+		}
+		
+		 Sortable tables 
+		table.sortable a.sortheader {
+			color: black;
+			text-decoration: underline;
+		}
+			
+		table.sortable span.sortarrow, img {
+			color: black;
+			text-decoration: none;
+			border-width: 0px;
+		}
+			
+		table.sortable tr.wr_evenRow {
+			background-color: #ffffff;
+		}
+		
+		table.sortable tr.wr_oddRow {
+			background-color: #dddddd;
+		}	*/	
+	</style>
+
+	<table>
+		<tr>
+			<td class="userinput">
+				Computer:
+			</td>
+			<td class="userinput">
+				<select id="computerName" name="computerName" size="1">
+					<option value="default" selected="true" style="background-color: #532900; color: white;">--Select Computer --</option>
+					<?relevance (html "<option value=%22" & item 1 of it & html "%22>" & item 0 of it & html "</option>") of(preceding text of first "||" of it, following text of first "||" of it) of unique values of ((if (exists name of it) then (name of it as lowercase)
+					else ( "No name") ) & "||" & id of it as string) of bes computers ?>
+				</select>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="userinput">
+				Baseline:
+			</td>
+			<td class="userinput">
+				<div id="baselineDiv">
+					<select id="baselineName" name="baselineName" size="1">
+						<option value="default" selected="true" style="background-color: #532900; color: white;">--Select Baseline --</option>
+						<?relevance (html "<option value=%22" & item 1 of it & html "%22>" & item 0 of it & html "</option>") of(preceding text of first "||" of it, following text of first "||" of it) of unique values of(name of it & "||" & id of it as string) of bes fixlets
+						whose(baseline flag of it=true) ?>
+					</select>
+				</div>
+			</td>
+			<td class="userinput">
+				<input id=g enerateButton type="button" value="Generate Report" onclick="search()" />
+			</td>
+		</tr>
+	</table>
+
+	<!-- Relevance Summary Section --------------------------------------------------------------------------------------------------------------- -->
+	<div id="relevanceDiv">
+
+	</div>
+
+	<!-- Action Result Section --------------------------------------------------------------------------------------------------------------- -->
+	<div id="actionDiv">
+
+	</div>
+
+	<!-- Action Details Section --------------------------------------------------------------------------------------------------------------- -->
+	<div id="actionDetailsDiv" style="position:relative; left:100px">
+
+	</div>
+
+
+	<!-- Fixlets Result Section --------------------------------------------------------------------------------------------------------------- -->
+	<hr />
+	<div id="resultsDiv">
+	</div>
+
+	<!-- JavaScript Section --------------------------------------------------------------------------------------------------------------- -->
+
+	<script type="text/javascript">
+		
+		function search() {
+			var divRes = document.getElementById('resultsDiv');
+			divRes.style.display = 'block';
+
+			if (computerName.value == "default") {
+				divRes.innerHTML = '<table><tr><td class = "errormsg">Please select a computer from the drop list</td></tr></table>';
+				return;
+			}
+
+			if (baselineName.value == "default") {
+				divRes.innerHTML = '<table><tr><td class = "errormsg">Please select a baseline from the drop list</td></tr></table>';
+				return;
+			}
+
+			divRes.innerHTML = 'Searching...';
+
+			// Clean up Action Details section
+			var divActionDetails = document.getElementById('actionDetailsDiv');
+			divActionDetails.innerHTML = '';
+
+			var selObj = document.getElementById('baselineName');
+			var selIndex = selObj.selectedIndex;
+			var baselineDesc = selObj.options[selIndex].text;
+
+			var selObj2 = document.getElementById('computerName');
+			var selIndex2 = selObj2.selectedIndex;
+			var computerNameDesc = selObj2.options[selIndex2].text;
+
+			var relevanceSummary = 'if (exists relevant fixlets whose (baseline flag of it = true and id of it is ' + baselineName.value + ') of  bes computers whose (id of it is ' + computerName.value + ')) then (html "<hr/><table><tr><td class = %22msg%22>Baseline %22' + baselineDesc + '%22 is <font color=red>Relevant</font> on computer ' + computerNameDesc + '</td></tr></table><br/>") else (html "<hr/><table><tr><td class = %22msg%22>Baseline %22' + baselineDesc + '%22 is <font color=green>Not Relevant</font> on computer ' + computerNameDesc + '</td></tr></table><br/>")';
+
+			strResponseSummary = EvaluateRelevance(relevanceSummary);
+			document.getElementById('relevanceDiv').innerHTML = strResponseSummary;
+
+			// Actions taken on the selected baseline against the selected computer
+			var relevanceAction = 'if (exists bes actions whose (id of source fixlet of it =' + baselineName.value + ') and number of results from (bes computer whose (id of it is ' + computerName.value + ')) of (bes actions whose (id of source fixlet of it = ' + baselineName.value + ')) > 0) then (html "<hr/><table><tr><td class = %22msg%22>Actions taken on computer ' + computerNameDesc + '. Click on row to see details</td></tr></table><table id=%22resultsTable%22 class=%22sortable%22><th>Baseline Action ID</th><th>State</th><th>Issuer</th><th>Time Issued</th><th>Status</th><th>Additional Info</th>" & it & html "</table><br/>") of concatenations of (html "<tr onMouseOver=%22this.style.cursor=%27pointer%27%22 onClick=%22HighLightTR(this,%27#C0C0C0%27,%27#000000%27," & item 0 of it as string & html ");%22>" & item 1 of it & html "</tr>") of (id of action of it, td of (id of action of it as string) & td of state of action of it & td of name of issuer of action of it & td of (year of date (local time zone) of it as string & "-" & month of date (local time zone) of it as two digits as string & "-" &  day_of_month of date (local time zone) of it as two digits as string & last 15 of (it as string) ) of time issued of action of it & td of (status of it as string) & td of detailed status of it) of  results from(bes computer whose(id of it is ' + computerName.value + ')) of(bes actions whose(id of source fixlet of it = ' + baselineName.value + ')) else (html "<hr/> <table><tr><td class = %22msg%22>No actions have been taken against baseline %22' + baselineDesc + '%22 on computer ' + computerNameDesc + '</td></tr></table><br/>")';
+
+			strResponseAction = EvaluateRelevance(relevanceAction);
+			document.getElementById('actionDiv').innerHTML = strResponseAction;
+
+			// Component Fixlets and their relevance against the selected computer
+			var relevance = '(html "<table><tr><td class = %22msg%22>Component Fixlets and their relevance on computer ' + computerNameDesc + '</td></tr></table><table id=%22resultsTable%22 class=%22sortable%22><th>Fixlet</th><th>Applicability</th>" & it & html "</table>") of concatenations of trs "onMouseOver=%22this.bgColor=%27#C0C0C0%27%22 onMouseOut=%22this.bgColor=%27#FFFFFF%27%22 bgcolor=%22#FFFFFF%22" of (td of name of it & td of (if (it contains "' + computerName.value + '") then (html "<font color=red>Relevant</font>") else (html "<font color=green>Not Relevant</font>")) of concatenation "|" of (ids of elements of applicable computer set of it as string)) of components of component groups of bes fixlets whose (baseline flag of it = true and id of it =' + baselineName.value + ')';
+			strResponse = EvaluateRelevance(relevance);
+			document.getElementById('resultsDiv').innerHTML = strResponse;
+
+			sortables_init();
+		}
+
+		function getActionDetails(actionId) {
+
+			var divActionDetails = document.getElementById('actionDetailsDiv');
+			divActionDetails.innerHTML = 'Searching...';
+
+			var relevanceActionDetails = '(html "<table><tr><td class = %22msg%22>Statuses of Member Actions</td></tr></table><table id=%22resultsTable%22 class=%22sortable%22><th>Member Action ID</th><th>Fixlet</th><th>Status</th>" & it & html "</table><br/>") of concatenations of trs "onMouseOver=%22this.bgColor=%27#C0C0C0%27%22 onMouseOut=%22this.bgColor=%27#FFFFFF%27%22 bgcolor=%22#FFFFFF%22" of (td of (id of action of it as string) & td of name of action of it & td of (status of it as string)) of results from (bes computer whose (id of it is ' + computerName.value + ')) of (elements of member action sets of bes actions whose (id of it is ' + actionId + '))';
+
+			strResponseActionDetails = EvaluateRelevance(relevanceActionDetails);
+			divActionDetails.innerHTML = strResponseActionDetails;
+
+			sortables_init();
+		}
+
+		var preEl;
+		var orgBColor;
+		var orgTColor;
+
+		function HighLightTR(el, backColor, textColor, actionId) {
+			if (typeof (preEl) != 'undefined') {
+				preEl.bgColor = orgBColor;
+				try {
+					ChangeTextColor(preEl, orgTColor);
+					// Clear the Action Details section
+					document.getElementById('actionDetailsDiv').innerHTML = '';
+				} catch (e) {
+					alert(e.message);
+				}
+			}
+			orgBColor = el.bgColor;
+			orgTColor = el.style.color;
+			el.bgColor = backColor;
+
+			try {
+				ChangeTextColor(el, textColor);
+				getActionDetails(actionId);
+			} catch (e) {
+				alert(e.message);
+			}
+			preEl = el;
+		}
+
+
+		function ChangeTextColor(a_obj, a_color) {
+			for (i = 0; i < a_obj.cells.length; i++)
+				a_obj.cells[i].style.color = a_color;
+		}
+	  </script>

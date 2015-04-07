@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="BES.xsd">
+  <Baseline>
+    <Title>Create_Baseline_Example</Title>
+    <Description></Description>
+    <Relevance>true</Relevance>
+    <Category></Category>
+    <Source></Source>
+    <SourceID></SourceID>
+    <SourceSeverity></SourceSeverity>
+    <CVENames></CVENames>
+    <SANSID></SANSID>
+    <MIMEField>
+      <Name>x-fixlet-modification-time</Name>
+      <Value>Fri, 13 Feb 2015 17:10:00 -0800</Value> 
+    </MIMEField>
+    <Domain>BESC</Domain>
+    <BaselineComponentCollection>
+      <BaselineComponentGroup>
+        <BaselineComponent ActionName="Action1" Name="MasterSite_FixletA" SourceID="39" SourceSiteURL="http://dw001:52311/cgi-bin/bfgather.exe/actionsite"
+                           IncludeInRelevance="true">
+          <ActionScript MIMEType="application/x-Fixlet-Windows-Shell">if {"A"="A"}
+	wait notepad
+else
+	run mspaint
+endif</ActionScript>
+          <SuccessCriteria Option="OriginalRelevance"></SuccessCriteria>
+          <Relevance>((1=1) AND (2=2)) AND (3=3)</Relevance>
+        </BaselineComponent>
+        <BaselineComponent ActionName="Action1" Name="MasterSite_FixletB" SourceID="40" SourceSiteURL="http://dw001:52311/cgi-bin/bfgather.exe/actionsite"
+                           IncludeInRelevance="true">
+          <ActionScript MIMEType="application/x-Fixlet-Windows-Shell">if {"B"="B"}
+	wait notepad
+else
+	run mspaint
+endif</ActionScript>
+          <SuccessCriteria Option="OriginalRelevance"></SuccessCriteria>
+          <Relevance>((40=40) AND (50=50)) AND (60=60)</Relevance>
+        </BaselineComponent>
+      </BaselineComponentGroup>
+    </BaselineComponentCollection>
+  </Baseline>
+</BES>
+

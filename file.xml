@@ -1,0 +1,440 @@
+ Content-Length: 1136
+Content-Type: multipart/form-data; boundary=----------------------------27beaea68af8
+
+------------------------------27beaea68af8
+Content-Disposition: form-data; name="file"; filename="file.data"
+Content-Type: application/octet-stream
+
+<?xml version="1.0" encoding="UTF-8"?>
+<BESAPI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BES.xsd">
+	<Task>
+		<Title><![CDATA[Spybot - Search & Destroy - Deploy]]></Title>
+		<Description><![CDATA[
+<DIV class=FixletMessage>
+<TABLE><TBODY><TR><TD><FONT size=2>Spybot Search &amp; Destroy is not installed on these computers. Spybot is an application that will scan for and remove malicous adware and spyware programs from affected computers.<BR><BR>Spybot will be installed with the default behavior enumerated below:<BR> <UL> <LI>Scan automatically <LI>Fix automatically <LI>Re-run after fixing <LI>Immunize automatically <LI>Scan only during idle time <LI>Create backups <LI>Create system restore points (WinXP only) <LI>Do not look for updates</LI></UL><FONT color=#0000ff size=2> <P><FONT color=#333333>If you would like to change the default settings,&nbsp;you can use the Spybot Configuration Wizard&nbsp;before running Spybot.</FONT></FONT><FONT size=2><FONT color=#000000></FONT></P></FONT> <P><!--StartFragment --><STRONG>Note:</STRONG> By deploying this action, you will be installing Spybot - Search &amp; Destroy, distributed by PepiMK Software. You must accept the <A href="http://www.safer-networking.org/en/license/index.html">license agreement</A> before deploying Spybot. By applying this Fixlet message, you are implicitly accepting the license agreement (the end user will NOT be prompted to accept the new license).</P> <P><STRONG>Note:</STRONG> This task will update&nbsp;Spybot with the latest available spyware&nbsp;definitions once it is installed.</P></FONT></TD></TR></TBODY></TABLE>
+</DIV>
+<DIV class=FixletProperty>
+<H4>File Size:</H4>
+4.80 MB - 5.33 MB
+ </DIV>]]></Description>
+		<Relevance>if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false</Relevance>
+		<Relevance>(it starts with "win" AND it does not start with "win9" AND it does not start with "winme" AND it does not start with "winnt") of (name of operating system as lowercase)</Relevance>
+		<Relevance><![CDATA[version of client >= "5.0"]]></Relevance>
+		<Relevance>name of operating system != "WinVista"</Relevance>
+		<Relevance><![CDATA[not exists key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry]]></Relevance>
+		<Relevance>TRUE</Relevance>
+		<Category>Deploy</Category>
+		<DownloadSize>5589376</DownloadSize>
+		<Source>PepiMK Software</Source>
+		<SourceID><![CDATA[<Unspecified>]]></SourceID>
+		<SourceReleaseDate>2009-10-14</SourceReleaseDate>
+		<SourceSeverity><![CDATA[<Unspecified>]]></SourceSeverity>
+		<DefaultAction ID="Action1">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> to install Spybot.</PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[download http://betanewsdl.sjc.cachefly.net/spybotsd14.exe
+continue if {(size of it = 5037072 and sha1 of it = "f6feca87bf7ae26bb175753129de87d7577c822e") of file "spybotsd14.exe" of folder "__Download"}
+
+download http://www.spybotupdates.com/updates/files/spybotsd_includes.exe
+continue if {(size of it = 5589376 AND sha1 of it = "2ef8acd830b23a9a456a468a89b1edc8fb4f43b7") of file "spybotsd_includes.exe" of folder "__Download"}
+
+wait __Download\spybotsd14.exe /verysilent /nocancel /components="main" /norestart
+
+// make sure install was successful
+continue if {exists key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry}
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics]" "InstallationDate"="{now}"
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Settings]" "RunPriority"="LOW"
+
+// make things work for NT
+delete __appendfile
+delete nt.bat
+
+appendfile @ECHO OFF
+appendfile {if (name of operating system = "WinNT") then ("mkdir " & "%22" & pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy" & "%22") else ("")}
+
+move __appendfile nt.bat
+
+wait "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" nt.bat
+
+continue if {exists file (pathname of client folder of current site & "\SpybotConfiguration.ini") AND exists folder (if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy"))}
+
+delete "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))}"
+
+copy "{(pathname of client folder of current site & "\SpybotConfiguration.ini")}" "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))}"
+
+wait __Download\spybotsd_includes.exe /S /v/qn
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics]" "LastDefinitionUpdate"="{now}"]]></ActionScript>
+		</DefaultAction>
+		<Action ID="Link2">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink><![CDATA[ to learn more about Spybot - Search &amp; Destroy.]]></PostLink>
+			</Description>
+			<ActionScript MIMEType="text/x-uri">http://www.safer-networking.org/en/spybotsd/index.html</ActionScript>
+		</Action>
+		<Action ID="Link3">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> for more information on the Client Manager for Spyware Tools site.</PostLink>
+			</Description>
+			<ActionScript MIMEType="text/x-uri">http://support.bigfix.com/bes/sites/spywaretools.html</ActionScript>
+		</Action>
+	</Task>
+	<Task>
+		<Title><![CDATA[Spybot - Search & Destroy - Run]]></Title>
+		<Description><![CDATA[
+<DIV class=FixletMessage>
+The listed computers have Spybot - Search &amp; Destroy installed and configured for administration using BES. You can use this task to initiate a Spybot scan using the current Spybot configuration settings. If you would like to modify the Spybot configuration, you can use the Spybot Configuration Wizard before running this task.
+</DIV>]]></Description>
+		<Relevance>if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false</Relevance>
+		<Relevance>(it starts with "win" AND it does not start with "win9" AND it does not start with "winme" AND it does not start with "winnt") of (name of operating system as lowercase)</Relevance>
+		<Relevance><![CDATA[version of client >= "5.0"]]></Relevance>
+		<Relevance>name of operating system != "WinVista"</Relevance>
+		<Relevance><![CDATA[exists key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry]]></Relevance>
+		<Relevance>(exists key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Settings" of it AND exists value "RunPriority" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Settings" of it) of registry</Relevance>
+		<Relevance><![CDATA[exists file (if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))]]></Relevance>
+		<Relevance>not exists running application "SpybotSD.exe"</Relevance>
+		<Relevance><![CDATA[exists file "Spybots.sbi" of folder ((value "Inno Setup: App Path" of it as string & "\Includes") of key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry)]]></Relevance>
+		<Category>Run</Category>
+		<DownloadSize>0</DownloadSize>
+		<Source>BigFix</Source>
+		<SourceID><![CDATA[<Unspecified>]]></SourceID>
+		<SourceSeverity><![CDATA[<Unspecified>]]></SourceSeverity>
+		<DefaultAction ID="Action1">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> to run Spybot on the selected computers.</PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[delete __appendfile
+delete spybotpostrunstats.reg
+
+appendfile REGEDIT4
+appendfile [HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics]
+appendfile "NeedsStatsUpdate"="True"
+appendfile [HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\OverallRunStats]
+appendfile "NumberOfTimesRun"="{if ((exists key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\OverallRunStats" of it AND exists value "NumberOfTimesRun" whose (it as string != "") of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\OverallRunStats" of it) of registry) then ((value "NumberOfTimesRun" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\OverallRunStats" of registry) as integer + 1) else (1)}"
+
+move __appendfile spybotpostrunstats.reg
+
+delete __appendfile
+delete finishtimereg.bat
+
+appendfile @echo off
+appendfile 
+appendfile set my_tzone=%1
+appendfile set my_date=%date%
+appendfile 
+appendfile for /f "tokens=1,2,3,4 delims=/ " %%i in ("%my_date%") do (
+appendfile set my_abrv=%%i
+appendfile set my_month=%%j
+appendfile set my_day=%%k
+appendfile set my_year=%%l )
+appendfile 
+appendfile if "%my_month%"=="01" SET my_month=Jan
+appendfile if "%my_month%"=="02" SET my_month=Feb
+appendfile if "%my_month%"=="03" SET my_month=Mar
+appendfile if "%my_month%"=="04" SET my_month=Apr
+appendfile if "%my_month%"=="05" SET my_month=May
+appendfile if "%my_month%"=="06" SET my_month=Jun
+appendfile if "%my_month%"=="07" SET my_month=Jul
+appendfile if "%my_month%"=="08" SET my_month=Aug
+appendfile if "%my_month%"=="09" SET my_month=Sep
+appendfile if "%my_month%"=="10" SET my_month=Oct
+appendfile if "%my_month%"=="11" SET my_month=Nov
+appendfile if "%my_month%"=="12" SET my_month=Dec
+appendfile 
+appendfile set my_time=%time%
+appendfile 
+appendfile for /f "tokens=1,2,3 delims=:." %%i in ("%my_time%") do (
+appendfile set my_hour=%%i
+appendfile set my_min=%%j
+appendfile set my_sec=%%k )
+appendfile 
+appendfile if "%my_hour:~0,1%"==" " SET my_hour=0%my_hour:~1,1%
+appendfile 
+appendfile set mime_date=%my_abrv%, %my_day% %my_month% %my_year%%my_hour%:%my_min%:%my_sec%%my_tzone%
+appendfile 
+appendfile echo REGEDIT4 > finishtime.reg
+appendfile echo [HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\LastRunStats] >> finishtime.reg
+appendfile echo "LastRunFinishTime"="%mime_date%" >> finishtime.reg
+appendfile regedit /s finishtime.reg
+
+move __appendfile finishtimereg.bat
+
+delete __appendfile
+delete runspybot.bat
+
+appendfile @ECHO OFF
+appendfile start "" /{value "RunPriority" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Settings" of registry} /WAIT "{value "DisplayIcon" of key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry as string}" /taskbarhide /autoclose
+appendfile regedit /s "{pathname of client folder of current site & "\spybotpostrunstats.reg"}"
+appendfile "{pathname of client folder of current site & "\finishtimereg.bat"}" {local time zone}
+appendfile EXIT
+
+move __appendfile runspybot.bat
+
+delete __appendfile
+delete spybotruntimestats.reg
+
+appendfile REGEDIT4
+appendfile [HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\LastRunStats]
+appendfile "LastRunStartTime"="{now}"
+appendfile
+appendfile [HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\OverallRunStats]
+appendfile "FirstTimeRun"="{if ((exists key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\OverallRunStats" of it AND exists value "FirstTimeRun" whose (it as string != "") of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\OverallRunStats" of it) of registry) then ((value "FirstTimeRun" of key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics\OverallRunStats" of registry) as string) else (now as string)}"
+appendfile "LastTimeRun"="{now}"
+
+move __appendfile spybotruntimestats.reg
+
+delete __appendfile
+delete movefiles.bat
+
+appendfile :: Usage: movefiles.bat [destination] [files...]
+appendfile :: Will create destination if it doesn't exist
+appendfile :: Should suppress all errors for use with RunQuiet
+appendfile :: Copyright (c) 2005 by BigFix, Inc. All Rights Reserved.
+appendfile 
+appendfile @ECHO OFF
+appendfile set my_dest=%1
+appendfile mkdir %my_dest% > NUL 2> NUL
+appendfile shift
+appendfile :Loop
+appendfile    If !==!%1 Goto End
+appendfile    If Exist %1 move %1 %my_dest% > NUL 2> NUL
+appendfile    Shift > NUL 2> NUL
+appendfile    Goto Loop
+appendfile :End
+
+move __appendfile movefiles.bat
+
+// roll the logs
+run "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" movefiles.bat "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\OldLogs") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\OldLogs"))}" {(if (exists folder (if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Logs") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Logs"))) then ("%22" & pathname of it & "\*%22") of folder (if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Logs") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Logs")) else (""))}
+
+run "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" runspybot.bat
+
+run "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" "{pathname of system folder & "\cmd.exe"}" /c regedit /s spybotruntimestats.reg]]></ActionScript>
+		</DefaultAction>
+		<Action ID="Link2">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> for more information on the Client Manager for Spyware Tools Site.</PostLink>
+			</Description>
+			<ActionScript MIMEType="text/x-uri">http://support.bigfix.com/bes/sites/spywaretools.html</ActionScript>
+		</Action>
+	</Task>
+	<Task>
+		<Title><![CDATA[Spybot - Search & Destroy - Uninstall Spybot < 1.4]]></Title>
+		<Description><![CDATA[
+<DIV class=FixletMessage>
+Spybot - Search &amp; Destroy is installed on these computers. You can uninstall Spybot using this Task. To uninstall and leave the Spybot statistics gathered via BES intact, use the first action. If you would also like to remove the Spybot statistics maintained by BES, use the second action. <BR><BR><b>Note:</b> A progress bar will briefly be displayed while the uninstall takes place.
+</DIV>]]></Description>
+		<Relevance>if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false</Relevance>
+		<Relevance>(it starts with "win" AND it does not start with "win9" AND it does not start with "winme" AND it does not start with "winnt") of (name of operating system as lowercase)</Relevance>
+		<Relevance><![CDATA[version of client >= "5.0"]]></Relevance>
+		<Relevance>name of operating system != "WinVista"</Relevance>
+		<Relevance><![CDATA[(exists key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of it AND exists value "DisplayVersion" whose (it as string as version < "1.4") of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of it) of registry]]></Relevance>
+		<Category>Uninstall</Category>
+		<DownloadSize>0</DownloadSize>
+		<Source>BigFix</Source>
+		<SourceID><![CDATA[<Unspecified>]]></SourceID>
+		<SourceSeverity><![CDATA[<Unspecified>]]></SourceSeverity>
+		<Action ID="Action1">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink><![CDATA[ to uninstall Spybot - S&amp;D.]]></PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[wait {value "UninstallString" of key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry as string} /SILENT /NORESTART /SUPPRESSMSGBOXES
+
+action requires restart]]></ActionScript>
+		</Action>
+		<Action ID="Action2">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink><![CDATA[ to uninstall Spybot - S&amp;D and remove statistics.]]></PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[run {value "UninstallString" of key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry as string} /VERYSILENT /NORESTART /SUPPRESSMSGBOXES
+
+delete delspybot.reg
+delete __appendfile
+
+appendfile REGEDIT4
+appendfile
+appendfile [-HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot]
+appendfile 
+
+move __appendfile delspybot.reg
+
+wait "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" "{pathname of system folder & "\cmd.exe"}" /c regedit /s delspybot.reg
+
+delete delspybot.reg
+
+action requires restart]]></ActionScript>
+		</Action>
+		<Action ID="Link3">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> for more information on the Client Manager for Spyware Tools Site.</PostLink>
+			</Description>
+			<ActionScript MIMEType="text/x-uri">http://support.bigfix.com/bes/sites/spywaretools.html</ActionScript>
+		</Action>
+	</Task>
+	<Task>
+		<Title><![CDATA[Spybot - Search & Destroy - Reset]]></Title>
+		<Description><![CDATA[
+<DIV class=FixletMessage>
+<TABLE><TBODY><TR><TD><FONT size=2> <P><FONT size=2>The listed computers have Spybot - Search &amp; Destroy installed.&nbsp; You may use this Task at anytime to reset&nbsp;Spybot to the default configuration for administration via BES.&nbsp; Additionally, when Spybot is administered via BES a number of statistics are maintained.&nbsp; You may use this Task to reset the statistics.</FONT></P> <P><FONT size=2>If you chose to reset to the default configuration, Spybot will be configured to run with the behavior enumerated below:</FONT><FONT size=2></P> <UL> <LI>Scan automatically <LI>Fix automatically <LI>Re-run after fixing <LI>Immunize automatically <LI>Scan only during idle time <LI>Create backups <LI>Create system restore points (WinXP only) <LI>Do not look for updates</FONT></LI></UL></FONT></TD></TR></TBODY></TABLE>
+</DIV>]]></Description>
+		<Relevance>if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false</Relevance>
+		<Relevance>(it starts with "win" AND it does not start with "win9" AND it does not start with "winme" AND it does not start with "winnt") of (name of operating system as lowercase)</Relevance>
+		<Relevance><![CDATA[version of client >= "5.0"]]></Relevance>
+		<Relevance>name of operating system != "WinVista"</Relevance>
+		<Relevance><![CDATA[exists key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry]]></Relevance>
+		<Category>Maintenance</Category>
+		<DownloadSize>0</DownloadSize>
+		<Source>BigFix</Source>
+		<SourceID><![CDATA[<Unspecified>]]></SourceID>
+		<SourceSeverity><![CDATA[<Unspecified>]]></SourceSeverity>
+		<DefaultAction ID="Action1">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> to reset Spybot to the default BES configuration.</PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Settings]" "RunPriority"="LOW"
+
+continue if {exists file (pathname of client folder of current site & "\SpybotConfiguration.ini") AND exists folder (if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy"))}
+
+delete "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))}"
+
+copy "{(pathname of client folder of current site & "\SpybotConfiguration.ini")}" "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))}"]]></ActionScript>
+		</DefaultAction>
+		<Action ID="Action2">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> to reset the Spybot statistics maintained by BES.</PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[delete delspybot.reg
+delete __appendfile
+
+appendfile REGEDIT4
+appendfile
+appendfile [-HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics]
+appendfile 
+
+move __appendfile delspybot.reg
+
+wait "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" "{pathname of system folder & "\cmd.exe"}" /c regedit /s delspybot.reg
+
+delete delspybot.reg]]></ActionScript>
+		</Action>
+		<Action ID="Action3">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> to reset Spybot to the default BES configuration and reset the Spybot statistics maintained by BES.</PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[delete delspybot.reg
+delete __appendfile
+
+appendfile REGEDIT4
+appendfile
+appendfile [-HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics]
+appendfile 
+
+move __appendfile delspybot.reg
+
+wait "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" "{pathname of system folder & "\cmd.exe"}" /c regedit /s delspybot.reg
+
+delete delspybot.reg
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Settings]" "RunPriority"="LOW"
+
+continue if {exists file (pathname of client folder of current site & "\SpybotConfiguration.ini") AND exists folder (if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy"))}
+
+delete "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))}"
+
+copy "{(pathname of client folder of current site & "\SpybotConfiguration.ini")}" "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))}"]]></ActionScript>
+		</Action>
+		<Action ID="Link4">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> for more information on the Client Manager for Spyware Tools Site.</PostLink>
+			</Description>
+			<ActionScript MIMEType="text/x-uri">http://support.bigfix.com/bes/sites/spywaretools.html</ActionScript>
+		</Action>
+	</Task>
+	<Task>
+		<Title><![CDATA[Spybot - Search & Destroy - Uninstall Spybot]]></Title>
+		<Description><![CDATA[
+<DIV class=FixletMessage>
+Spybot - Search &amp; Destroy is installed on these computers. You can uninstall Spybot using this Task. To uninstall and leave the Spybot statistics gathered via BES intact, use the first action. If you would also like to remove the Spybot statistics maintained by BES, use the second action. <BR><BR><b>Note:</b> A progress bar will briefly be displayed while the uninstall takes place.
+</DIV>]]></Description>
+		<Relevance>if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false</Relevance>
+		<Relevance>(it starts with "win" AND it does not start with "win9" AND it does not start with "winme" AND it does not start with "winnt") of (name of operating system as lowercase)</Relevance>
+		<Relevance><![CDATA[version of client >= "5.0"]]></Relevance>
+		<Relevance>name of operating system != "WinVista"</Relevance>
+		<Relevance><![CDATA[(exists key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of it AND exists value "DisplayVersion" whose (it as string as version >= "1.4") of key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of it) of registry]]></Relevance>
+		<Category>Uninstall</Category>
+		<DownloadSize>0</DownloadSize>
+		<Source>BigFix</Source>
+		<SourceID><![CDATA[<Unspecified>]]></SourceID>
+		<SourceSeverity><![CDATA[<Unspecified>]]></SourceSeverity>
+		<Action ID="Action1">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink><![CDATA[ to uninstall Spybot - S&amp;D.]]></PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[wait {value "UninstallString" of key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry as string} /VERYSILENT /NORESTART
+
+action requires restart]]></ActionScript>
+		</Action>
+		<Action ID="Action2">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink><![CDATA[ to uninstall Spybot - S&amp;D and remove statistics.]]></PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[run {value "UninstallString" of key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry as string} /VERYSILENT /NORESTART /SUPPRESSMSGBOXES
+
+delete delspybot.reg
+delete __appendfile
+
+appendfile REGEDIT4
+appendfile
+appendfile [-HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot]
+appendfile 
+
+move __appendfile delspybot.reg
+
+wait "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" "{pathname of system folder & "\cmd.exe"}" /c regedit /s delspybot.reg
+
+delete delspybot.reg
+
+action requires restart]]></ActionScript>
+		</Action>
+		<Action ID="Link3">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> for more information on the Client Manager for Spyware Tools Site.</PostLink>
+			</Description>
+			<ActionScript MIMEType="text/x-uri">http://support.bigfix.com/bes/sites/spywaretools.html</ActionScript>
+		</Action>
+	</Task>
+</BESAPI>
+
+------------------------------27beaea68af8--

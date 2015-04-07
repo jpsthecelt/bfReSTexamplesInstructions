@@ -1,0 +1,20 @@
+ make multiple actions with one REST API HTTP request
+
+All of the actions' IDs are returned with the response to the one HTTP request, as shown below.
+
+$ curl --insecure https://bigfix:bigfix@localhost:62311/api/actions --request P
+OST --data @two_actions.bes
+<?xml version="1.0" encoding="UTF-8"?>
+<BESAPI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSch
+emaLocation="BESAPI.xsd">
+        <Action Resource="http://localhost:62311/api/action/38" LastModified="Th
+u, 03 Jul 2014 18:21:36 +0000">
+                <Name>Custom Action_name_firstAction</Name>
+                <ID>38</ID>
+        </Action>
+        <Action Resource="http://localhost:62311/api/action/39" LastModified="Th
+u, 03 Jul 2014 18:21:36 +0000">
+                <Name>Custom Action_name_secondAction</Name>
+                <ID>39</ID>
+        </Action>
+</BESAPI>

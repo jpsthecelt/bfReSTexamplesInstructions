@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BES.xsd">
+	<Fixlet>
+		<Title><![CDATA[Spybot - Search & Destroy - Deploy]]></Title>
+		<Description><![CDATA[
+<DIV class=FixletMessage>
+<TABLE><TBODY><TR><TD><FONT size=2>Spybot Search &amp; Destroy is not installed on these computers. Spybot is an application that will scan for and remove malicous adware and spyware programs from affected computers.<BR><BR>Spybot will be installed with the default behavior enumerated below:<BR> <UL> <LI>Scan automatically <LI>Fix automatically <LI>Re-run after fixing <LI>Immunize automatically <LI>Scan only during idle time <LI>Create backups <LI>Create system restore points (WinXP only) <LI>Do not look for updates</LI></UL><FONT color=#0000ff size=2> <P><FONT color=#333333>If you would like to change the default settings,&nbsp;you can use the Spybot Configuration Wizard&nbsp;before running Spybot.</FONT></FONT><FONT size=2><FONT color=#000000></FONT></P></FONT> <P><!--StartFragment --><STRONG>Note:</STRONG> By deploying this action, you will be installing Spybot - Search &amp; Destroy, distributed by PepiMK Software. You must accept the <A href="http://www.safer-networking.org/en/license/index.html">license agreement</A> before deploying Spybot. By applying this Fixlet message, you are implicitly accepting the license agreement (the end user will NOT be prompted to accept the new license).</P> <P><STRONG>Note:</STRONG> This task will update&nbsp;Spybot with the latest available spyware&nbsp;definitions once it is installed.</P></FONT></TD></TR></TBODY></TABLE>
+</DIV>
+<DIV class=FixletProperty>
+<H4>File Size:</H4>
+4.80 MB - 5.33 MB
+ </DIV>]]></Description>
+		<Relevance>if( name of operating system starts with "Win" ) then platform id of operating system != 3 else false</Relevance>
+		<Relevance>(it starts with "win" AND it does not start with "win9" AND it does not start with "winme" AND it does not start with "winnt") of (name of operating system as lowercase)</Relevance>
+		<Relevance><![CDATA[version of client >= "5.0"]]></Relevance>
+		<Relevance>name of operating system != "WinVista"</Relevance>
+		<Relevance><![CDATA[not exists key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry]]></Relevance>
+		<Relevance>TRUE</Relevance>
+		<Category>Deploy</Category>
+		<DownloadSize>5589376</DownloadSize>
+		<Source>PepiMK Software</Source>
+		<SourceID><![CDATA[<Unspecified>]]></SourceID>
+		<SourceReleaseDate>2009-10-14</SourceReleaseDate>
+		<SourceSeverity><![CDATA[<Unspecified>]]></SourceSeverity>
+		<DefaultAction ID="Action1">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> to install Spybot.</PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell"><![CDATA[download http://betanewsdl.sjc.cachefly.net/spybotsd14.exe
+continue if {(size of it = 5037072 and sha1 of it = "f6feca87bf7ae26bb175753129de87d7577c822e") of file "spybotsd14.exe" of folder "__Download"}
+
+download http://www.spybotupdates.com/updates/files/spybotsd_includes.exe
+continue if {(size of it = 5589376 AND sha1 of it = "2ef8acd830b23a9a456a468a89b1edc8fb4f43b7") of file "spybotsd_includes.exe" of folder "__Download"}
+
+wait __Download\spybotsd14.exe /verysilent /nocancel /components="main" /norestart
+
+// make sure install was successful
+continue if {exists key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Spybot - Search & Destroy_is1" of registry}
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics]" "InstallationDate"="{now}"
+
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Settings]" "RunPriority"="LOW"
+
+// make things work for NT
+delete __appendfile
+delete nt.bat
+
+appendfile @ECHO OFF
+appendfile {if (name of operating system = "WinNT") then ("mkdir " & "%22" & pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy" & "%22") else ("")}
+
+move __appendfile nt.bat
+
+wait "{pathname of client folder of site "BESSupport" & "\RunQuiet.exe"}" nt.bat
+
+continue if {exists file (pathname of client folder of current site & "\SpybotConfiguration.ini") AND exists folder (if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy"))}
+
+delete "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))}"
+
+copy "{(pathname of client folder of current site & "\SpybotConfiguration.ini")}" "{(if (name of operating system != "WinNT") then (value of variable "allusersprofile" of environment & "\Application Data\Spybot - Search & Destroy\Configuration.ini") else (pathname of windows folder & "\Profiles\Default User\Application Data\Spybot - Search & Destroy\Configuration.ini"))}"
+
+wait __Download\spybotsd_includes.exe /S /v/qn
+regset "[HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\EnterpriseClient\Spybot\Statistics]" "LastDefinitionUpdate"="{now}"]]></ActionScript>
+		</DefaultAction>
+		<Action ID="Link2">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink><![CDATA[ to learn more about Spybot - Search &amp; Destroy.]]></PostLink>
+			</Description>
+			<ActionScript MIMEType="text/x-uri">http://www.safer-networking.org/en/spybotsd/index.html</ActionScript>
+		</Action>
+		<Action ID="Link3">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> for more information on the Client Manager for Spyware Tools site.</PostLink>
+			</Description>
+			<ActionScript MIMEType="text/x-uri">http://support.bigfix.com/bes/sites/spywaretools.html</ActionScript>
+		</Action>
+	</Fixlet>
+</BES>

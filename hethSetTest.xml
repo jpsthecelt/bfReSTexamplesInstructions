@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SkipUI="true">
+    <SingleAction>
+        <Title>test action</Title>
+        <Relevance>true</Relevance>
+        <ActionScript>setting "test action"="{now as string}" on "{now}" for client</ActionScript>
+        <SuccessCriteria />
+        <Settings />
+        <SettingsLocks />
+        <Target>
+            <AllComputers>true</AllComputers>
+        </Target>
+    </SingleAction>
+</BES>

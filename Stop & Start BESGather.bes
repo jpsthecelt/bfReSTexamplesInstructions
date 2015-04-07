@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BES.xsd">
+	<SingleAction>
+		<Title><![CDATA[Stop & Start BESGather]]></Title>
+		<Relevance>false</Relevance>
+		<ActionScript MIMEType="application/x-sh">#!/plan/xml
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plan xmlns="http://iemfsa.tivoli.ibm.com/AutomationPlanAction" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" source-plan-id="7239" source-plan-site-url="http://grasskeet:52311/cgi-bin/bfgather.exe/actionsite"&gt; 
+&lt;plan-steps&gt;
+&lt;step sequence="1"&gt;
+  &lt;fixlet fixlet-id="7234" site-url="http://grasskeet:52311/cgi-bin/bfgather.exe/actionsite" name="Stop%20BESGather%20Service" action-name="Action1" &gt;
+    &lt;relevance&gt;&lt;![CDATA[((if exists property "in proxy agent context" then (not in proxy agent context) else true) AND (name of operating system as lowercase contains "win")) AND (exists running service whose (service name of it as lowercase contains "besgather"))]]&gt;&lt;/relevance&gt;
+    &lt;action-script mime-type="application/x-Fixlet-Windows-Shell"&gt;&lt;![CDATA[waithidden cmd.exe /C net stop {service name of services whose (service name of it as lowercase contains "besgather" AND state of it = "Running")}]]&gt;&lt;/action-script&gt;
+&lt;success  type="CustomRelevance"&gt;&lt;![CDATA[exists running service whose (service name of it as lowercase contains "besgather")]]&gt;&lt;/success&gt;  &lt;/fixlet&gt;
+  &lt;targets&gt;GRASSKEET
+&lt;/targets&gt;
+&lt;/step&gt;
+&lt;step sequence="2"&gt;
+  &lt;fixlet fixlet-id="7233" site-url="http://grasskeet:52311/cgi-bin/bfgather.exe/actionsite" name="Start%20BESGather%20Service" action-name="Action1" &gt;
+    &lt;relevance&gt;&lt;![CDATA[((if exists property "in proxy agent context" then (not in proxy agent context) else true) AND (name of operating system as lowercase contains "win")) AND (exists service whose (service name of it as lowercase contains "besgather" AND state of it = "Stopped"))]]&gt;&lt;/relevance&gt;
+    &lt;action-script mime-type="application/x-Fixlet-Windows-Shell"&gt;&lt;![CDATA[waithidden cmd.exe /C net start {service name of services whose (service name of it as lowercase contains "besgather" AND state of it = "Stopped")}]]&gt;&lt;/action-script&gt;
+&lt;success  type="CustomRelevance"&gt;&lt;![CDATA[not exists running service whose (service name of it as lowercase contains "besgather")]]&gt;&lt;/success&gt;  &lt;/fixlet&gt;
+  &lt;targets&gt;GRASSKEET
+&lt;/targets&gt;
+&lt;/step&gt;
+
+&lt;/plan-steps&gt;
+&lt;/plan&gt;</ActionScript>
+		<SuccessCriteria Option="RunToCompletion"></SuccessCriteria>
+		<Settings>
+			<PreActionShowUI>false</PreActionShowUI>
+			<HasRunningMessage>false</HasRunningMessage>
+			<HasTimeRange>false</HasTimeRange>
+			<HasStartTime>true</HasStartTime>
+			<StartDateTimeLocalOffset>PT6H58M56S</StartDateTimeLocalOffset>
+			<HasEndTime>true</HasEndTime>
+			<EndDateTimeLocalOffset>P2DT7H1M4S</EndDateTimeLocalOffset>
+			<HasDayOfWeekConstraint>false</HasDayOfWeekConstraint>
+			<UseUTCTime>true</UseUTCTime>
+			<ActiveUserRequirement>NoRequirement</ActiveUserRequirement>
+			<ActiveUserType>AllUsers</ActiveUserType>
+			<HasWhose>false</HasWhose>
+			<PreActionCacheDownload>false</PreActionCacheDownload>
+			<Reapply>false</Reapply>
+			<HasReapplyLimit>true</HasReapplyLimit>
+			<ReapplyLimit>3</ReapplyLimit>
+			<HasReapplyInterval>false</HasReapplyInterval>
+			<HasRetry>false</HasRetry>
+			<HasTemporalDistribution>false</HasTemporalDistribution>
+			<ContinueOnErrors>true</ContinueOnErrors>
+			<PostActionBehavior Behavior="Nothing"></PostActionBehavior>
+			<IsOffer>false</IsOffer>
+		</Settings>
+		<SettingsLocks>
+			<ActionUITitle>false</ActionUITitle>
+			<PreActionShowUI>false</PreActionShowUI>
+			<PreAction>
+				<Text>false</Text>
+				<AskToSaveWork>false</AskToSaveWork>
+				<ShowActionButton>false</ShowActionButton>
+				<ShowCancelButton>false</ShowCancelButton>
+				<DeadlineBehavior>false</DeadlineBehavior>
+				<ShowConfirmation>false</ShowConfirmation>
+			</PreAction>
+			<HasRunningMessage>false</HasRunningMessage>
+			<RunningMessage>
+				<Text>false</Text>
+			</RunningMessage>
+			<TimeRange>false</TimeRange>
+			<StartDateTimeOffset>false</StartDateTimeOffset>
+			<EndDateTimeOffset>false</EndDateTimeOffset>
+			<DayOfWeekConstraint>false</DayOfWeekConstraint>
+			<ActiveUserRequirement>false</ActiveUserRequirement>
+			<ActiveUserType>false</ActiveUserType>
+			<Whose>false</Whose>
+			<PreActionCacheDownload>false</PreActionCacheDownload>
+			<Reapply>false</Reapply>
+			<ReapplyLimit>false</ReapplyLimit>
+			<RetryCount>false</RetryCount>
+			<RetryWait>false</RetryWait>
+			<TemporalDistribution>false</TemporalDistribution>
+			<ContinueOnErrors>false</ContinueOnErrors>
+			<PostActionBehavior>
+				<Behavior>false</Behavior>
+				<AllowCancel>false</AllowCancel>
+				<Deadline>false</Deadline>
+				<Title>false</Title>
+				<Text>false</Text>
+			</PostActionBehavior>
+			<IsOffer>false</IsOffer>
+			<AnnounceOffer>false</AnnounceOffer>
+			<OfferCategory>false</OfferCategory>
+			<OfferDescriptionHTML>false</OfferDescriptionHTML>
+		</SettingsLocks>
+		<IsUrgent>false</IsUrgent>
+	</SingleAction>
+</BES>
