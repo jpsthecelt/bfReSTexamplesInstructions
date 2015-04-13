@@ -5,7 +5,7 @@ Thanks for reading.... jps
 
 
 ____________________________________________________________________________________________________
-LESSON 1:
+LESSON 2:
 
 Greetings, folks; jpsthecelt, here. 'Sales Engineer to the Stars'.
 
@@ -25,7 +25,8 @@ Another thing I should note; in a production environment, one would probably use
 
 So, let's look at some examples.
 
-Examples & explanations -- Lesson 2
+Examples & explanations -- Lesson 
+----------------------------------
 
 Here are some examples in two of those languages, Python and Ruby (I'm using the vanilla BF ReST api, but the same can be done with the SCA (security) and SUA ReST apis). For Ruby, we'll use net/http (libraries in Python are called 'eggs'; ruby libraries are called 'gems').
 
@@ -85,6 +86,8 @@ try to print dict
 1494 Updated Windows Client - Tivoli Endpoint Manager version 8.2.1400.0 Now Available!
 :
 Here's the source code:
+
+
 import requests
 import xml.etree.ElementTree as ET
 
@@ -116,15 +119,18 @@ print 'try to print dict'
 for key in iter(d):
    print key,d[key]
 
+
 **************************
 
 Update, as of 1.17.15-jps:
 
->>> I recently updated my development environment, and found that there was a new version of the requests library which 'throws' a warning when you neglect to use a real SSL certificate. This looks ugly, even for testing.  As a result, I recoded the above example, using urllib3, which just happens to have a 'disable_warnings()' routine that makes testing easier & prettier.  This following code produces exactly the same result as shown above.
+> I recently updated my development environment, and found that there was a new version of the requests library which 'throws' a warning when you neglect to use a real SSL certificate. This looks ugly, even for testing.  As a result, I recoded the above example, using urllib3, which just happens to have a 'disable_warnings()' routine that makes testing easier & prettier.  This following code produces exactly the same result as shown above.
 
 So, now, I used the following code -- notice it's completely the same, except for the urllib3 calls vs. the requests calls, and I think it looks more 'self-documenting'.
 
 (Oh, yeah, there's another trivial difference, in that urllib3 has a r.data vs. an r.text attribute and r.status vs. an r.status_code attribute):
+
+
 import urllib3
 import xml.etree.ElementTree as ET
 baseurl = 'http://grasskeet:52311/api'
@@ -162,6 +168,7 @@ for key in iter(d):
 
 I have two other useful scripts, one will import a fixlet called 'TweedleDee' into the BF master action site.
 Again, I have a line that logs me in, and another that does a POST:
+
 r = requests.post(baseurl+'fixlets/master',verify=False,auth=('adminMO','adminmo'), data=open('TweedleDee.bes','rb'))
 if r.status_code != 200:
    print r.status_code
@@ -192,10 +199,11 @@ r = requests.post(baseurl+'fixlets/master',verify=False,auth=('adminMO','adminmo
 
 if r.status_code != 200:
    print r.status_code
-
 print 'Heres the XML I got back from POSTing', r.text
 
+
 Second, the exported (XML) contents of TweedelDee.bes:
+
 
 <?xml version="1.0" encoding="UTF-8"?>
 <BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BES.xsd">
@@ -248,12 +256,16 @@ endif
     </Fixlet>
 </BES>
 
+*******************************************************
+
 POSTing a message:
 Finally, if I want to execute an action (which could be a fixlet or an action-plan), I could create an
 XML file with my actionID, and reference it with a BF POST as:
 r = requests.post(baseurl+'actions',verify=False,auth=('adminMO','adminmo'), data=open('stopBesGather.xml', 'rb'))
 
+
 The file temPostActionViaRest.py looks like this:
+
 import requests
 
 baseurl = 'https://localhost:52311/api/'
@@ -307,11 +319,12 @@ end
 end
 
 
+
 This program is invoked as
 Ruby nHTTP.rb
 
 
-An 'exercise for the student', is to use these programs as 'templates', and try invoking an automation-plan
+As An 'exercise for the student', try using these programs as 'templates', and invoke an automation-plan
 From the Server Automation site within BF (assuming that you have IEM with Server Automation).
 
 Enjoy! 'Stay Tuned', and we'll see other stuff 'the cool kids' do....
