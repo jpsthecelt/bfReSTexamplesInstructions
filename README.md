@@ -174,12 +174,12 @@ if r.status_code != 200:
    print r.status_code
 
 ImportTweedelDeeFixlet.py and TweedleDee.bes (which I originally got by exporting an existing fixlet) look like the following (ImportTweedleDeeFixlet.py, first):
-# With this script, we're going to take an exported fixlet, 'TweedleDee.bes'
-#    and import it into the console using the ReST API.
+# With this script, we're going to take an exported fixlet, 'TweedleDee.bes' and import it into the console using the ReST API.
 
 # notice that this uses the Python Egg called Requests;
 #    it simplifies REST authentication, such that I can easily specify the URL,
 #    the fact that I'm bypassing any SSL Cert, and my username/password.
+
 import requests
 import xml.etree.ElementTree as ET
 
