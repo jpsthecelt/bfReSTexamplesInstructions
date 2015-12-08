@@ -3,7 +3,34 @@ Some ReST examples I created for client-instruction, partners, interested partie
 
 Thanks for reading.... jps
 
+ChangeLog
+____________________________________________________________________________________________________
+Commits on Apr 13, 2015
 
+    @jpsthecelt
+
+    Update README.md …
+    jpsthecelt committed on Apr 13
+
+@jpsthecelt
+
+Update README.md …
+jpsthecelt committed on Apr 13
+@jpsthecelt
+
+Updated README to describe first 'LESSON' in BF-ReST series
+jpsthecelt committed on Apr 13
+
+Commits on Apr 7, 2015
+
+    @jpsthecelt
+
+    Adding README
+    jpsthecelt committed on Apr 7
+
+Commit on December 8, 2015
+   Added Changelog
+   
 ____________________________________________________________________________________________________
 LESSON 2:
 
