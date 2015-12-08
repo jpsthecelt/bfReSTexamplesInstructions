@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BESAPI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BESAPI.xsd"><ComputerSettings Resource="https://%%tgt_computer:52311/api/computer/%%computer_id/setting/%%setting_name"><Setting Resource="https://%%tgt_computer:52311/api/computer/%%computer_id/setting/%%setting_name"><Name>%%setting_name</Name><Value>%%setting_value</Value></Setting></ComputerSettings></BESAPI>
